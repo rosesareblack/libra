@@ -234,6 +234,7 @@ async function handleFreePlanUploadDeduction(
 
                 // Refresh the FREE plan with new quota and immediately deduct 1 for this request
                 // This ensures the refresh operation is immediately successful
+                // Note: projectNums is preserved to maintain user's actual project count
                 await tx
                     .update(subscriptionLimit)
                     .set({
@@ -242,7 +243,7 @@ async function handleFreePlanUploadDeduction(
                         uploadLimit: freePlanLimits.aiNums - 1, // Refresh and deduct in one operation
                         deployLimit: freePlanLimits.aiNums * 2,
                         seats: freePlanLimits.seats,
-                        projectNums: freePlanLimits.projectNums,
+                        // projectNums: keep existing value, don't reset
                         periodStart: newPeriodStart.toISOString(),
                         periodEnd: nextPeriodEnd.toISOString(),
                         updatedAt: sql`CURRENT_TIMESTAMP`,
